@@ -8,11 +8,11 @@ class DishSection extends React.Component {
 
     return (
       <div className="dish-section">
-        <h2 className="section-title">{category.menu_category}</h2>
+        <h1 className="section-title">{category.menuCategory}</h1>
         <div className="dish-list">
-          {category.category_dishes.map(dish => (
+          {category.categoryDishes.map(dish => (
             <DishCard
-              key={dish.dish_id}
+              key={dish.dishId}
               dish={dish}
               cart={cart}
               updateItemCount={updateItemCount}

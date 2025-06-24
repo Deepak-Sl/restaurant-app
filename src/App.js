@@ -1,7 +1,7 @@
 import React from 'react'
-import Navbar from './components/Navbar/index'
-import CategoryTabs from './components/CategoryTabs/index'
-import DishSection from './components/DishSection/index'
+import Navbar from './components/Navbar'
+import CategoryTabs from './components/CategoryTabs'
+import DishSection from './components/DishSection'
 import './App.css'
 
 class App extends React.Component {
@@ -16,16 +16,37 @@ class App extends React.Component {
     this.getData()
   }
 
+  transformDishes = dishes =>
+    dishes.map(dish => ({
+      dishId: dish.dish_id,
+      dishName: dish.dish_name,
+      dishPrice: dish.dish_price,
+      dishCurrency: dish.dish_currency,
+      dishDescription: dish.dish_description,
+      dishCalories: dish.dish_calories,
+      dishImage: dish.dish_image,
+      dishType: dish.dish_Type,
+      dishAvailability: dish.dish_Availability,
+      addonCat: dish.addonCat,
+    }))
+
   getData = async () => {
     const response = await fetch(
       'https://apis2.ccbp.in/restaurant-app/restaurant-menu-list-details',
     )
     const data = await response.json()
-    console.log(data[0].table_menu_list)
+    const menuList = data[0].table_menu_list.map(category => ({
+      ...category,
+      menuCategoryId: category.menu_category_id,
+      menuCategory: category.menu_category,
+      categoryDishes: this.transformDishes(category.category_dishes),
+    }))
 
     this.setState({
-      menuData: data[0].table_menu_list,
-      selectedCategory: data[0].table_menu_list[0],
+      menuData: menuList,
+      selectedCategory: menuList.find(
+        cat => cat.menuCategory === 'Salads and Soup' || menuList[0],
+      ),
       isLoading: false,
     })
   }
@@ -38,8 +59,9 @@ class App extends React.Component {
     this.setState(prevState => {
       const cart = {...prevState.cart}
       const newCount = (cart[id] || 0) + change
-      if (newCount <= 0) delete cart[id]
-      else cart[id] = newCount
+      if (newCount <= 0) {
+        cart[id] = 0
+      } else cart[id] = newCount
       return {cart}
     })
   }
@@ -49,17 +71,19 @@ class App extends React.Component {
     return (
       <div>
         <Navbar cart={cart} />
-        <CategoryTabs
-          categories={menuData}
-          onCategoryClick={this.handleCategoryClick}
-          selectedCategory={selectedCategory}
-        />
+        {!isLoading && (
+          <CategoryTabs
+            categories={menuData}
+            onCategoryClick={this.handleCategoryClick}
+            selectedCategory={selectedCategory}
+          />
+        )}
         <div className="content">
           {isLoading ? (
             <p className="loading">Loading menu...</p>
           ) : (
             <DishSection
-              key={selectedCategory.menu_category_id}
+              key={selectedCategory.menuCategoryId}
               category={selectedCategory}
               cart={cart}
               updateItemCount={this.updateItemCount}

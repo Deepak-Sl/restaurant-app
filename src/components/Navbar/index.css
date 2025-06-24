@@ -17,6 +17,8 @@
 
 .navbar-cart {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .cart-icon {

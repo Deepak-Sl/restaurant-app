@@ -9,15 +9,15 @@ class CategoryTabs extends React.Component {
         {categories.map(cat => (
           <button
             type="button"
-            key={cat.menu_category_id}
+            key={cat.menuCategoryId}
             onClick={() => onCategoryClick(cat)}
             className={`category-button ${
-              selectedCategory.menu_category_id === cat.menu_category_id
+              selectedCategory.menuCategoryId === cat.menuCategoryId
                 ? 'active'
                 : ''
             }`}
           >
-            {cat.menu_category}
+            {cat.menuCategory}
           </button>
         ))}
       </div>

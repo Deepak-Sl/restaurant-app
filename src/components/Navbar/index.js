@@ -10,6 +10,7 @@ class Navbar extends React.Component {
       <div className="navbar">
         <h1 className="navbar-title">UNI Resto Cafe</h1>
         <div className="navbar-cart">
+          <p>My Orders</p>
           <span className="cart-icon">🛒</span>
           {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
         </div>
